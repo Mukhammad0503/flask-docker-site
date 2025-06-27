@@ -1,60 +1,53 @@
-<!DOCTYPE html>
+<!DOCTYP<!DOCTYPE html>
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <title>Ro'yxatdan o'tish</title>
+  <title>Ro‘yxatdan o‘tish</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      background-image: url('/static/wave.gif.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      height: 100%;
       font-family: sans-serif;
     }
 
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
     .form-box {
-      background-color: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.9);
       padding: 30px;
-      border-radius: 15px;
+      border-radius: 12px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
       width: 400px;
       max-width: 90%;
+      margin: 80px auto;
     }
 
-    .form-box h3 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-box label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .form-box input {
+    .form-box input, .form-box button {
       width: 100%;
-      padding: 8px;
+      padding: 12px;
+      margin-top: 10px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 16px;
     }
 
     .form-box button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007BFF;
+      background-color: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     .form-box button:hover {
@@ -75,8 +68,13 @@
 </head>
 <body>
 
+  <video autoplay loop muted playsinline id="bg-video">
+        style="position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1;">
+    <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4">
+  </video>
+
   <div class="form-box">
-    <h3>Ro‘yxatdan o‘tish</h3>
+    <h3 class="text-center mb-4">Ro‘yxatdan o‘tish</h3>
     <form method="POST" action="/submit">
       <label>Ism:</label>
       <input type="text" name="ism" required>
@@ -85,7 +83,11 @@
       <input type="text" name="familiya" required>
 
       <label>Telefon raqam:</label>
-      <input type="text" name="telefon" required>
+      <input type="tel" name="telefon" required 
+             pattern="^\+998\d{9}$"
+             maxlength="13"
+             placeholder="+998901234567"
+             title="Faqat O'zbekiston raqamlari: +998 bilan boshlanishi va 13 ta belgidan iborat bo'lishi kerak.">
 
       <button type="submit">Yuborish</button>
     </form>
@@ -93,7 +95,3 @@
 
 </body>
 </html>
-
-
-
-
