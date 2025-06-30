@@ -1,0 +1,23 @@
+name: Flask Docker CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodni yuklash
+        uses: actions/checkout@v3
+
+      - name: Docker o‘rnatish
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker image yaratish
+        run: docker build -t flask-site .
+
+      - name: Fayllar qurildi
+        run: echo "Docker image yaratildi!"
