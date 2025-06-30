@@ -1,6 +1,6 @@
+import sqlite3
 import requests
 from flask import Flask, render_template, request
-import sqlite3
 
 app = Flask(__name__)
 
@@ -58,3 +58,4 @@ def submit():
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
+
