@@ -22,7 +22,7 @@ jobs:
 
     - name: Deploy to remote server
       run: |
-        ssh -p ${{ secrets.SSH_PORT }} anonymous@${{ secrets.SSH_HOST }} << 'EOF'
+        ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
           cd /home/test1/PythonProject
           git pull origin main
           docker compose down
