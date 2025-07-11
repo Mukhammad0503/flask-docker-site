@@ -25,3 +25,4 @@ jobs:
           docker-compose down
           git pull origin main
           docker-compose up -d --build
+# Trigger CI/CD again
