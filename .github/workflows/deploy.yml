@@ -17,7 +17,7 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: 213.230.71.173         # 💡 PUBLIC IP ni shu yerga yozasan
-        port: 5100                   # 💡 Shu portni berishgan — to‘g‘ri yoz
+        port: 22                   # 💡 Shu portni berishgan — to‘g‘ri yoz
         username: root              # 💡 Kirayotgan login — root
         key: ${{ secrets.SSH_KEY }} # 💡 GitHub Secret’ga qo‘yilgan private key
         script: |
