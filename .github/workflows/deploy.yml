@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Remote Server
 
 on:
   push:
@@ -7,22 +7,24 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Remote Server
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup SSH and Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        port: 22
-        script: |
-          cd /home/test1/PythonProject
-          docker-compose down
-          git pull origin main
-          docker-compose up -d --build
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 5100 213.230.71.173 >> ~/.ssh/known_hosts
+
+      - name: Deploy to remote server
+        run: |
+          ssh -p 5100 root@213.230.71.173 << 'EOF'
+            cd /home/test1/PythonProject
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
+          EOF
