@@ -10,19 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: 📂 Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Setup SSH and Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: 213.230.71.173
-          username: root
-          port: 5100
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/test1/PythonProject
-            git pull origin main
-            docker compose down || docker-compose down
-            docker compose up -d --build || docker-compose up -d --build
-# Trigger CI/CD again
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: 213.230.71.173         # 💡 PUBLIC IP ni shu yerga yozasan
+        port: 5100                   # 💡 Shu portni berishgan — to‘g‘ri yoz
+        username: root              # 💡 Kirayotgan login — root
+        key: ${{ secrets.SSH_KEY }} # 💡 GitHub Secret’ga qo‘yilgan private key
+        script: |
+          cd /home/test1/PythonProject
+          docker-compose down
+          git pull origin main
+          docker-compose up -d --build
