@@ -13,21 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p 5100 213.230.71.173 >> ~/.ssh/known_hosts
-
-      - name: Deploy with Docker Compose
-        run: |
-          ssh -p 5100 root@213.230.71.173 << 'EOF'
-            set -e
+      - name: Setup SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: 213.230.71.173
+          username: root
+          port: 5100
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             cd /home/test1/PythonProject
             git pull origin main
-            which docker || (echo "Docker is not installed!" && exit 1)
-            which docker-compose || (echo "docker-compose is not installed!" && exit 1)
             docker compose down || docker-compose down
             docker compose up -d --build || docker-compose up -d --build
-          EOF
