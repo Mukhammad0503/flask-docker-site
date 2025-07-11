@@ -20,11 +20,14 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p 5100 213.230.71.173 >> ~/.ssh/known_hosts
 
-      - name: Deploy to remote server
+      - name: Deploy with Docker Compose
         run: |
           ssh -p 5100 root@213.230.71.173 << 'EOF'
+            set -e
             cd /home/test1/PythonProject
             git pull origin main
-            docker compose down
-            docker compose up -d --build
+            which docker || (echo "Docker is not installed!" && exit 1)
+            which docker-compose || (echo "docker-compose is not installed!" && exit 1)
+            docker compose down || docker-compose down
+            docker compose up -d --build || docker-compose up -d --build
           EOF
