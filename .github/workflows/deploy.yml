@@ -1,4 +1,4 @@
-name: Deploy to Remote Server
+name: Deploy to Production
 
 on:
   push:
@@ -7,22 +7,31 @@ on:
 
 jobs:
   deploy:
+    if: contains(github.event.head_commit.message, '#Prod')
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📂 Checkout Repository
-      uses: actions/checkout@v2
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Deploy via SSH
-      uses: appleboy/ssh-action@master
-      with:
-        host: 213.230.71.173         # 💡 PUBLIC IP ni shu yerga yozasan
-        port: 22                   # 💡 Shu portni berishgan — to‘g‘ri yoz
-        username: root              # 💡 Kirayotgan login — root
-        key: ${{ secrets.SSH_KEY }} # 💡 GitHub Secret’ga qo‘yilgan private key
-        script: |
-          cd /home/test1/PythonProject
-          docker-compose down
-          git pull origin main
-          docker-compose up -d --build
-# Trigger CI/CD again
+      - name: 📤 Copy files via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          source: "."
+          target: "/root/apps/myapp"
+
+      - name: 🚀 Run Docker Compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            cd /root/apps/myapp
+            docker-compose down
+            docker-compose up -d --build
