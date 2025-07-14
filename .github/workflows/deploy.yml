@@ -3,7 +3,7 @@ name: Deploy to Production
 on:
   push:
     branches:
-      - main  # Agar sening branching `main` bo‘lsa, `master`ni `main`ga almashtirdim
+      - master  # Agar sening branching `main` bo‘lsa, `master`ni `main`ga almashtirdim
 
 jobs:
   deploy:
